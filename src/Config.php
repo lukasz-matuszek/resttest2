@@ -13,27 +13,14 @@ class Config
 
     public function getSection($section)
     {
-        return $this->config[$section] ?? $this->config[$section];
+        return $this->config[$section] ?? [];
     }
 
     public function get($sectionKey)
     {
         [$section, $key] = explode('.', $sectionKey);
 
-        return $this->config[$section][$key] ?? $this->config[$section][$key];
+        return $this->config[$section][$key] ?? '';
     }
 
-    public static function section($section)
-    {
-        $config = parse_ini_file('../config/config.ini', true);
-
-        return $config[$section] ?? [];
-    }
-
-    public static function load()
-    {
-        $config = parse_ini_file('../config/config.ini', true);
-
-        return $config;
-    }
 }

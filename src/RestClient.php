@@ -69,8 +69,8 @@ class RestClient
     {
         $requestUrl = sprintf("%s?%s", $requestUrl, http_build_query($data));
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
-        $request = $this->psr->createRequest('GET', $uri, $headers);
+        $uri = $this->psrfactory->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psrfactory->createRequest('GET', $uri, $headers);
 
         return $this->service->sendRequest($request);
     }
@@ -80,8 +80,8 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
-        $request = $this->psr->createRequest('POST', $uri, $headers, $body);
+        $uri = $this->psrfactory->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psrfactory->createRequest('POST', $uri, $headers, $body);
 
         return $this->service->sendRequest($request);
     }
@@ -91,8 +91,8 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
-        $request = $this->psr->createRequest('PUT', $uri, $headers, $body);
+        $uri = $this->psrfactory->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psrfactory->createRequest('PUT', $uri, $headers, $body);
 
         return $this->service->sendRequest($request);
     }
@@ -102,8 +102,8 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
-        $request = $this->psr->createRequest('PATCH', $uri, $headers, $body);
+        $uri = $this->psrfactory->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psrfactory->createRequest('PATCH', $uri, $headers, $body);
 
         return $this->service->sendRequest($request);
     }
@@ -113,8 +113,8 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
-        $request = $this->psr->createRequest('DELETE', $uri, $headers);
+        $uri = $this->psrfactory->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psrfactory->createRequest('DELETE', $uri, $headers);
 
         return $this->service->sendRequest($request);
     }
@@ -124,8 +124,8 @@ class RestClient
     {
 
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
-        $request = $this->psr->createRequest('HEAD', $uri, $headers);
+        $uri = $this->psrfactory->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psrfactory->createRequest('HEAD', $uri, $headers);
 
         return $this->service->sendRequest($request);
     }
@@ -135,8 +135,8 @@ class RestClient
     {
 
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
-        $request = $this->psr->createRequest('OPTIONS', $uri, $headers);
+        $uri = $this->psrfactory->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psrfactory->createRequest('OPTIONS', $uri, $headers);
 
         return $this->service->sendRequest($request);
     }
