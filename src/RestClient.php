@@ -8,30 +8,30 @@ use Psr\Http\Message\ResponseInterface;
 class RestClient
 {
 
-    private $baseUrl;
-    private $authMethod;
-    private $authUser;
-    private $authPassword;
-    private $authUrl;
-    private $token;
+    private string $baseUrl;
 
-    protected $service;
-    protected $psrfactory;
+    private string $authMethod;
+    private string $authUser;
+    private string $authPassword;
+    private string $authUrl;
+    private string $token;
+
+    protected Config $config;
+    protected HttpServiceInterface $service;
+    protected Psr17Factory $psrfactory;
 
     public function __construct(HttpServiceInterface $httpService)
     {
         $this->service = $httpService;
-        $this->loadConfig();
+        $this->config = new Config();
         $this->psrfactory = new Psr17Factory();
+        $this->loadConfig();
     }
 
     protected function loadConfig()
     {
-        $conf = Config::section("resttest");
-        $this->setBaseUrl($conf['baseUrl']);
-
-        $confAuth = Config::section("resttestauth");
-        $this->setAuth($confAuth);
+        $this->setBaseUrl($this->config->get('resttest.baseUrl'));
+        $this->setAuth($this->config->getSection('resttestauth'));
     }
 
     public function setHttpService(HttpServiceInterface $httpService)
@@ -53,47 +53,23 @@ class RestClient
         $this->authUrl = $conf['authUrl'];
     }
 
-    protected function setHeaders()
+    protected function setHeaders($headers = [])
     {
-        $headers = [];
 
         // prepare headers
-        // based on auth method
+
+        // prepare headers auth method
 
         return $headers;
     }
     /* REST methods */
 
-    /* retrieve headers information */
-    public function head(array $data, string $requestUrl): ResponseInterface
-    {
-        $body = $data;
-        $headers = $this->setHeaders();
-        $uri = $this->psr->createUri( $this->baseUrl.$requestUrl);
-        $request = $this->psr->createRequest('HEAD', $uri, $headers);
-
-        return $this->service->sendRequest($request);
-    }
-
-    /* retrieve available options */
-    public function options(array $data, string $requestUrl): ResponseInterface
-    {
-        $body = $data;
-        $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl.$requestUrl);
-        $request = $this->psr->createRequest('OPTIONS', $uri, $headers);
-
-        return $this->service->sendRequest($request);
-    }
-
     /* retrieve data */
     public function get(array $data, string $requestUrl): ResponseInterface
     {
         $requestUrl = sprintf("%s?%s", $requestUrl, http_build_query($data));
-
-        $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl.$requestUrl);
+        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
         $request = $this->psr->createRequest('GET', $uri, $headers);
 
         return $this->service->sendRequest($request);
@@ -104,7 +80,7 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl.$requestUrl);
+        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
         $request = $this->psr->createRequest('POST', $uri, $headers, $body);
 
         return $this->service->sendRequest($request);
@@ -115,7 +91,7 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl.$requestUrl);
+        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
         $request = $this->psr->createRequest('PUT', $uri, $headers, $body);
 
         return $this->service->sendRequest($request);
@@ -126,7 +102,7 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl.$requestUrl);
+        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
         $request = $this->psr->createRequest('PATCH', $uri, $headers, $body);
 
         return $this->service->sendRequest($request);
@@ -137,8 +113,30 @@ class RestClient
     {
         $body = $data;
         $headers = $this->setHeaders();
-        $uri = $this->psr->createUri($this->baseUrl.$requestUrl);
+        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
         $request = $this->psr->createRequest('DELETE', $uri, $headers);
+
+        return $this->service->sendRequest($request);
+    }
+
+    /* retrieve headers information */
+    public function head(string $requestUrl): ResponseInterface
+    {
+
+        $headers = $this->setHeaders();
+        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psr->createRequest('HEAD', $uri, $headers);
+
+        return $this->service->sendRequest($request);
+    }
+
+    /* retrieve available options */
+    public function options(array $data, string $requestUrl): ResponseInterface
+    {
+
+        $headers = $this->setHeaders();
+        $uri = $this->psr->createUri($this->baseUrl . $requestUrl);
+        $request = $this->psr->createRequest('OPTIONS', $uri, $headers);
 
         return $this->service->sendRequest($request);
     }

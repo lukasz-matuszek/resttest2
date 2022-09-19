@@ -2,7 +2,6 @@
 
 namespace Lib;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Factory\HttplugFactory;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +17,6 @@ class CurlService implements HttpServiceInterface
     public function __construct()
     {
         $this->setDefaultOptions();
-        $this->psr = new Psr17Factory();
         $this->httplug = new HttplugFactory();
     }
 
@@ -112,10 +110,10 @@ class CurlService implements HttpServiceInterface
             }
             curl_setopt($curl, constant($curlOption), $optionValue);
         }
-        
+
         try {
             $curlResponse = curl_exec($curl);
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             //-- handle curl exec errors
             //   ...
             //--
@@ -128,7 +126,6 @@ class CurlService implements HttpServiceInterface
 
     protected function buildResponse($curl, $curlResponse): ResponseInterface
     {
-
 
         $headers = $this->getHeaders($curl, $curlResponse);
         $statusCode = $headers['status'];

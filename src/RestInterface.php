@@ -7,13 +7,13 @@ use Psr\Http\Message\ResponseInterface;
 interface RestInterface
 {
 
+    public function setHeaders();
+
+    public function setHttpService(HttpServiceInterface $httpService);
+
     public function setBaseUrl(string $baseUrl);
 
     public function setAuth(array $conf);
-
-    public function options(array $data, string $requestUrl): ResponseInterface;
-
-    public function head(array $data, string $requestUrl): ResponseInterface;
 
     /* retrieve data */
     public function get(array $data, string $requestUrl): ResponseInterface;
@@ -29,5 +29,11 @@ interface RestInterface
 
     /* delete an item */
     public function delete(array $data, string $requestUrl): ResponseInterface;
+
+    /* retrieve availbale options  information */
+    public function options( string $requestUrl): ResponseInterface;
+
+     /* retrieve headers information */
+    public function head( string $requestUrl): ResponseInterface;
 
 }
