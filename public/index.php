@@ -8,16 +8,14 @@ include __DIR__ . "/../vendor/autoload.php";
 use Lib\CurlService;
 use Lib\RestClient;
 
-
 //=======================
 echo "REST TEST<br>";
 
-
 $curlService = new CurlService();
-$restClient = new  RestClient( $curlService );
+$restClient = new  RestClient($curlService);
 
 //$restClient->setJwtAuthMethod();
-$result = $restClient->get([ 'drilldowns'=>'Nation' , 'measures'=>'Population'],'data');
+$result = $restClient->get(['drilldowns' => 'Nation', 'measures' => 'Population'], 'data');
 
 print_r($result);
 

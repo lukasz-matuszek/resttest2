@@ -1,4 +1,5 @@
 <?php
+
 namespace Lib;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -29,7 +30,7 @@ class CurlService implements HttpServiceInterface
         ];
     }
 
-    public function sendRequest(RequestInterface $request):ResponseInterface
+    public function sendRequest(RequestInterface $request): ResponseInterface
     {
         return $this->execCurl($request);
     }
@@ -44,7 +45,8 @@ class CurlService implements HttpServiceInterface
             return null;
         }
         $curlOptions = array_merge($this->defaultOptions, $this->$setCurlOptions($body));
-        $curlOptions ['CURLOPT_URL'] =  (string) $request->getUri();;
+        $curlOptions ['CURLOPT_URL'] = (string)$request->getUri();;
+
         return $curlOptions;
     }
 
@@ -91,7 +93,7 @@ class CurlService implements HttpServiceInterface
         return $this;
     }
 
-    protected function execCurl(RequestInterface $request ):ResponseInterface
+    protected function execCurl(RequestInterface $request): ResponseInterface
     {
 
         //-- initialize curl
@@ -110,31 +112,33 @@ class CurlService implements HttpServiceInterface
             }
             curl_setopt($curl, constant($curlOption), $optionValue);
         }
-        $curlResponse = curl_exec($curl);
-
-        //-- handle curl exec errors
-        //   ...
-        //--
         
+        try {
+            $curlResponse = curl_exec($curl);
+        }catch(\Exception $e) {
+            //-- handle curl exec errors
+            //   ...
+            //--
+        }
         $response = $this->buildResponse($curl, $curlResponse);
         curl_close($curl);
 
-
         return $response;
-
     }
 
-    protected function buildResponse($curl, $curlResponse):ResponseInterface
+    protected function buildResponse($curl, $curlResponse): ResponseInterface
     {
-        
-        
+
+
         $headers = $this->getHeaders($curl, $curlResponse);
-        $statusCode = $headers['status']; unset($headers['status']);
-        $reason = $headers['status_text'];unset($headers['status_text']);
+        $statusCode = $headers['status'];
+        unset($headers['status']);
+        $reason = $headers['status_text'];
+        unset($headers['status_text']);
         $body = $this->getData($curl, $curlResponse);
-        
-        $response = $this->httplug->createResponse( $statusCode, $reason, $headers, $body , $version = '1.1');
-        
+
+        $response = $this->httplug->createResponse($statusCode, $reason, $headers, $body, $version = '1.1');
+
         return $response;
     }
 
@@ -157,8 +161,7 @@ class CurlService implements HttpServiceInterface
         ];
     }
 
-
-        protected function getHeaders($curl, $curlResponse)
+    protected function getHeaders($curl, $curlResponse)
     {
         $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $headerData = substr($curlResponse, 0, $headerSize);
